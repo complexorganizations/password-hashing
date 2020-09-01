@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"math/rand"
+	"io/ioutil"
 )
 
 /* Todo:
@@ -49,4 +50,6 @@ func GetHash() {
 
 func main() {
 	// save the output to a file.
+	data, _ := json.Marshal(mainJSON)
+	_ = ioutil.WriteFile("hashing.json", data, 0644)
 }
