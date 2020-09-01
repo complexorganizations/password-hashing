@@ -13,8 +13,9 @@ import (
 )
 
 /* Todo:
-- Generate a random string (Duplicate Check)
-- Save the {SHA-512|SHA-256|SHA-1|MD5} with the string in a json file.
+- Duplicate Check
+- Save the output to a file
+- Add Concurrency
 */
 
 type PasswordReport struct {
