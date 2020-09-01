@@ -21,10 +21,6 @@ func GenerateString() {
 }
 
 func GetHash() {
-	// Get the Hash
-}
-
-func main() {
 	aStringToHash := []byte("Lets hash this sentence!")
 
 	//Get the hashes in bytes
@@ -41,4 +37,8 @@ func main() {
 	fmt.Println("SHA-1:", hex.EncodeToString(sha1Bytes[:]))
 	fmt.Println("SHA-256:", hex.EncodeToString(sha256Bytes[:]))
 	fmt.Println("SHA-512:", hex.EncodeToString(sha512Bytes[:]))
+}
+
+func main() {
+	// save the output to a file.
 }
