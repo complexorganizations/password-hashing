@@ -7,7 +7,6 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"time"
 	"io/ioutil"
@@ -68,6 +67,5 @@ func main() {
 		panic(err)
 	}
 
-	// fmt.Println(string(data))
 	ioutil.WriteFile("output.json", data, 0644)
 }
