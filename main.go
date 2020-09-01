@@ -7,6 +7,7 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
+	"encoding/json"
 )
 
 /* Todo:
