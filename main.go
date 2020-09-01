@@ -8,7 +8,9 @@ import (
 - Generate a random string (Duplicate Check)
 - Get the {SHA-512|SHA-256|SHA-1|MD5} of the string
 - Save the {SHA-512|SHA-256|SHA-1|MD5} with the string in a json file.
+*/
 
+/*
 {
   "random_string_0": {
     "sha-1": "sha-1_string_here",
@@ -23,7 +25,6 @@ import (
     "md5": "md5_string_here"
   }
 }
-
 */
 
 func main() {
