@@ -7,9 +7,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
+	"io/ioutil"
 	"math/rand"
 	"time"
-	"io/ioutil"
 )
 
 /* Todo:
