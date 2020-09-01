@@ -6,10 +6,8 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"encoding/hex"
-	"fmt"
 	"encoding/json"
-	"math/rand"
-	"io/ioutil"
+	"fmt"
 )
 
 /* Todo:
@@ -18,38 +16,43 @@ import (
 - Save the {SHA-512|SHA-256|SHA-1|MD5} with the string in a json file.
 */
 
-func RandomString(n int) string {
-    var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-
-    s := make([]rune, n)
-    for i := range s {
-        s[i] = letters[rand.Intn(len(letters))]
-    }
-    return string(s)
-	fmt.Println(RandomString(10))
+type PasswordReport struct {
+	MD5    string `json:"md5"`
+	SHA1   string `json:"sha-1"`
+	SHA256 string `json:"sha-256"`
+	SHA512 string `json:"sha-512"`
 }
 
-func GetHash() {
-	aStringToHash := []byte("Lets hash this sentence!")
+func getPasswordReport(password []byte) *PasswordReport {
+	md5Bytes := md5.Sum(password)
+	sha1Bytes := sha1.Sum(password)
+	sha256Bytes := sha256.Sum256(password)
+	sha512Bytes := sha512.Sum512(password)
 
-	//Get the hashes in bytes
-	md5Bytes := md5.Sum(aStringToHash)
-	sha1Bytes := sha1.Sum(aStringToHash)
-	sha256Bytes := sha256.Sum256(aStringToHash)
-	sha512Bytes := sha512.Sum512(aStringToHash)
+	return &PasswordReport{
+		MD5:    hex.EncodeToString(md5Bytes[:]),
+		SHA1:   hex.EncodeToString(sha1Bytes[:]),
+		SHA256: hex.EncodeToString(sha256Bytes[:]),
+		SHA512: hex.EncodeToString(sha512Bytes[:]),
+	}
+}
 
-	//Print out what will be hashed
-	fmt.Println(string(aStringToHash))
+func getCompleteReport(passwords []string) map[string]*PasswordReport {
+	completeReport := make(map[string]*PasswordReport)
 
-	//Bytes to string
-	fmt.Println("MD5:", hex.EncodeToString(md5Bytes[:]))
-	fmt.Println("SHA-1:", hex.EncodeToString(sha1Bytes[:]))
-	fmt.Println("SHA-256:", hex.EncodeToString(sha256Bytes[:]))
-	fmt.Println("SHA-512:", hex.EncodeToString(sha512Bytes[:]))
+	for _, pass := range passwords {
+		completeReport[pass] = getPasswordReport([]byte(pass))
+	}
+
+	return completeReport
 }
 
 func main() {
-	// save the output to a file.
-	data, _ := json.Marshal(mainJSON)
-	_ = ioutil.WriteFile("hashing.json", data, 0644)
+	// replace with Marshal, im using MarshalIndent for nice formatting
+	data, err := json.MarshalIndent(getCompleteReport([]string{"password", "abc123"}), "", "\t")
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(data))
 }
