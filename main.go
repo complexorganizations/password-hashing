@@ -14,6 +14,7 @@ import (
 )
 
 /* Todo:
+- Change from 20 character to 1-64
 - Duplicate Check
 - Add Concurrency
 */
