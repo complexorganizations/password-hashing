@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"math/rand"
 	"time"
+	"io/ioutil"
 )
 
 /* Todo:
 - Duplicate Check
-- Save the output to a file
 - Add Concurrency
 */
 
@@ -67,5 +67,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(string(data))
+	// fmt.Println(string(data))
+	ioutil.WriteFile("output.json", data, 0644)
 }
