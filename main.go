@@ -8,11 +8,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"math/rand"
+	"time"
 )
 
 /* Todo:
 - Generate a random string (Duplicate Check)
-- Get the {SHA-512|SHA-256|SHA-1|MD5} of the string
 - Save the {SHA-512|SHA-256|SHA-1|MD5} with the string in a json file.
 */
 
@@ -47,9 +48,20 @@ func getCompleteReport(passwords []string) map[string]*PasswordReport {
 	return completeReport
 }
 
+func RandomString(n int) string {
+	rand.Seed(time.Now().UnixNano())
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789")
+
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
+}
+
 func main() {
 	// replace with Marshal, im using MarshalIndent for nice formatting
-	data, err := json.MarshalIndent(getCompleteReport([]string{"password", "abc123"}), "", "\t")
+	data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString(20))}), "", "\t")
 	if err != nil {
 		panic(err)
 	}
