@@ -7,3 +7,7 @@ import (
 	"sync"
 	"time"
 )
+
+func main() {
+    fmt.Println("Hello world!")
+}
