@@ -1,6 +1,6 @@
 ## password-hashing
-### Looking for someone whos willing to sponsor this project.
 
+### Looking for someone whos willing to sponsor this project. 
 
 #### Features
 - Generate Random Passwords
