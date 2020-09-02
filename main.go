@@ -51,7 +51,8 @@ func getCompleteReport(passwords []string) map[string]*PasswordReport {
 
 func RandomString(n int) string {
 	rand.Seed(time.Now().UnixNano())
-	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789")
+	// Todo: Add " on the list of letterRunes
+        var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~")
 
 	b := make([]rune, n)
 	for i := range b {
