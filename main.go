@@ -41,20 +41,20 @@ func getPasswordReport(password []byte) *PasswordReport {
 
 func getCompleteReport(passwords []string) map[string]*PasswordReport {
 	completeReport := make(map[string]*PasswordReport)
-
+	var found bool
 	for _, pass := range passwords {
-		completeReport[pass] = getPasswordReport([]byte(pass))
+		if _, found = completeReport[pass]; !found {
+			completeReport[pass] = getPasswordReport([]byte(pass))
+		}
 	}
-
 	return completeReport
 }
 
-func RandomString(n int) string {
+func RandomString() string {
 	rand.Seed(time.Now().UnixNano())
-	// Todo: Add " on the list of letterRunes
-        var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~")
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\"")
 
-	b := make([]rune, n)
+	b := make([]rune, rand.Intn(64-1)+1)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
@@ -63,7 +63,7 @@ func RandomString(n int) string {
 
 func main() {
 	// replace with Marshal, im using MarshalIndent for nice formatting
-	data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString(20))}), "", "\t")
+	data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), "", "\t")
 	if err != nil {
 		panic(err)
 	}
