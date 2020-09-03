@@ -55,6 +55,7 @@ func producePassword(password chan string, wg *sync.WaitGroup) {
 //It then reads the random numbers from the password channel and writes to the file
 func writePassword(password chan string, done chan bool) {
 	f, err := os.Create("output.json")
+	completeReport := make(map[string]*PasswordReport)
 
 	if err != nil {
 		fmt.Println(err)
@@ -62,7 +63,12 @@ func writePassword(password chan string, done chan bool) {
 	}
 
 	for pass := range password {
-		data, err := json.MarshalIndent(getPasswordReport([]byte(pass)), "", "\t")
+		for _, p := range pass {
+			if _, found := completeReport[string(p)]; !found {
+				completeReport[string(p)] = getPasswordReport([]byte(pass))
+			}
+		}
+		data, err := json.MarshalIndent(completeReport, "", "\t")
 		if err != nil {
 			panic(err)
 		}
@@ -85,9 +91,7 @@ func main() {
 	password := make(chan string)
 	done := make(chan bool)
 
-	//waitgroup
 	wg := sync.WaitGroup{}
-
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go producePassword(password, &wg)
