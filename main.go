@@ -7,16 +7,12 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"math/rand"
+	"os"
+	"sync"
 	"time"
 )
-
-/* Todo:
-- Change from 20 character to 1-64
-- Duplicate Check
-- Add Concurrency
-*/
 
 type PasswordReport struct {
 	MD5    string `json:"md5"`
@@ -39,34 +35,73 @@ func getPasswordReport(password []byte) *PasswordReport {
 	}
 }
 
-func getCompleteReport(passwords []string) map[string]*PasswordReport {
-	completeReport := make(map[string]*PasswordReport)
-
-	for _, pass := range passwords {
-		completeReport[pass] = getPasswordReport([]byte(pass))
-	}
-
-	return completeReport
-}
-
-func RandomString(n int) string {
+//producePassword is a function that generates random passwords
+//and send them to password channel
+func producePassword(password chan string, wg *sync.WaitGroup) {
 	rand.Seed(time.Now().UnixNano())
-	// Todo: Add " on the list of letterRunes
-        var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~")
+	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\"")
 
-	b := make([]rune, n)
+	b := make([]rune, rand.Intn(64-1)+1)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
-	return string(b)
+
+	password <- string(b)
+	wg.Done()
+}
+
+//writePassword creates the file for if it does not exist
+// and writes the password to it.
+//It then reads the random numbers from the password channel and writes to the file
+func writePassword(password chan string, done chan bool) {
+	f, err := os.Create("output.json")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	for pass := range password {
+		data, err := json.MarshalIndent(getPasswordReport([]byte(pass)), "", "\t")
+		if err != nil {
+			panic(err)
+		}
+
+		if _, err := f.Write(data); err != nil {
+			println(err)
+		}
+	}
+
+	err = f.Close()
+	if err != nil {
+		fmt.Println(err)
+		done <- false
+		return
+	}
+	done <- true
 }
 
 func main() {
-	// replace with Marshal, im using MarshalIndent for nice formatting
-	data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString(20))}), "", "\t")
-	if err != nil {
-		panic(err)
+	password := make(chan string)
+	done := make(chan bool)
+
+	wg := sync.WaitGroup{}
+	for i := 0; i < 100; i++ {
+		wg.Add(1)
+		go producePassword(password, &wg)
 	}
 
-	ioutil.WriteFile("output.json", data, 0644)
+	go writePassword(password, done)
+
+	go func() {
+		wg.Wait()
+		close(password)
+	}()
+
+	d := <-done
+	if d == true {
+		fmt.Println("File written successfully")
+	} else {
+		fmt.Println("File writing failed")
+	}
 }
