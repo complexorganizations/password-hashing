@@ -60,11 +60,12 @@ func RandomString() string {
 }
 
 func main() {
-	// replace with Marshal, im using MarshalIndent for nice formatting
-	data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), "", "\t")
-	if err != nil {
-		panic(err)
-	}
-
-	ioutil.WriteFile("output.json", data, 0644)
+        for {
+                // replace with Marshal, im using MarshalIndent for nice formatting
+                data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), "", "\t")
+                if err != nil {
+                        panic(err)
+                }
+                ioutil.WriteFile("output.json", data, 0644)
+        }
 }
