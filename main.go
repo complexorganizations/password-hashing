@@ -85,7 +85,9 @@ func main() {
 	password := make(chan string)
 	done := make(chan bool)
 
+	//waitgroup
 	wg := sync.WaitGroup{}
+
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go producePassword(password, &wg)
