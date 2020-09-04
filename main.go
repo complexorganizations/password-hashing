@@ -13,6 +13,7 @@ import (
 )
 
 /* Todo:
+- Make it write on new lines
 - Add Concurrency
 */
 
