@@ -7,8 +7,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"encoding/json"
-	"io/ioutil"
+	"fmt"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -61,12 +62,20 @@ func RandomString() string {
 }
 
 func main() {
+	file, err := os.Create("output.json")
+	if err != nil {
+		fmt.Printf("os erreur %s", err)
+	}
+
 	for {
 		// replace with Marshal, im using MarshalIndent for nice formatting
-		data, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), "", "\t")
+		b, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), " ", "\t")
 		if err != nil {
 			panic(err)
 		}
-		ioutil.WriteFile("output.json", data, 0644)
+		//ioutil.WriteFile("output.json", data, 0644)
+		if _, err = file.Write(b); err != nil {
+			fmt.Printf("error writing to a file %s", err)
+		}
 	}
 }
