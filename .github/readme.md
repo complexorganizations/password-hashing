@@ -18,12 +18,6 @@
     "sha-256": "sha-256_string_here",
     "sha-512": "sha-512_string_here",
     "md5": "md5_string_here"
-  },
-  "random_string_1": {
-    "sha-1": "sha-1_string_here",
-    "sha-256": "sha-256_string_here",
-    "sha-512": "sha-512_string_here",
-    "md5": "md5_string_here"
   }
 }
 ```
