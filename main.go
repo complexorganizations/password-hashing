@@ -59,7 +59,7 @@ func RandomString() string {
 func main() {
 	file, err := os.Create("output.json")
 	if err != nil {
-		fmt.Printf("os erreur %s", err)
+		fmt.Printf("OS Error: %s", err)
 	}
 
 	for {
@@ -70,7 +70,7 @@ func main() {
 		}
 		//ioutil.WriteFile("output.json", data, 0644)
 		if _, err = file.Write(b); err != nil {
-			fmt.Printf("error writing to a file %s", err)
+			fmt.Printf("Error writing to a file %s", err)
 		}
 	}
 }
