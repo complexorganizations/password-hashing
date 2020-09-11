@@ -69,7 +69,7 @@ func main() {
 
 	for {
 		// replace with Marshal, im using MarshalIndent for nice formatting
-		b, err := json.MarshalIndent(getCompleteReport([]string{(RandomString())}), " ", "\t")
+		b, err := json.Marshal(getCompleteReport([]string{(RandomString())}))
 		if err != nil {
 			panic(err)
 		}
