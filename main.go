@@ -13,6 +13,12 @@ import (
 	"time"
 )
 
+var (
+	charactersList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\""
+	charactersCount = 64
+	outputFile = "output.json"
+)
+
 type PasswordReport struct {
 	MD5    string `json:"md5"`
 	SHA1   string `json:"sha-1"`
@@ -47,9 +53,9 @@ func getCompleteReport(passwords []string) map[string]*PasswordReport {
 
 func RandomString() string {
 	rand.Seed(time.Now().UnixNano())
-	var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\"")
+	var letterRunes = []rune(charactersList)
 
-	b := make([]rune, rand.Intn(64-1)+1)
+	b := make([]rune, rand.Intn(charactersCount)+1)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
 	}
@@ -57,7 +63,7 @@ func RandomString() string {
 }
 
 func main() {
-	file, err := os.Create("output.json")
+	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Printf("OS Error: %s", err)
 	}
