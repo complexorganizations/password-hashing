@@ -69,12 +69,10 @@ func main() {
 	}
 
 	for {
-		// replace with Marshal, im using MarshalIndent for nice formatting
 		b, err := json.Marshal(getCompleteReport([]string{(RandomString())}))
 		if err != nil {
 			panic(err)
 		}
-		//ioutil.WriteFile("output.json", data, 0644)
 		if _, err = file.Write(b); err != nil {
 			fmt.Printf("Error writing to a file %s", err)
 		}
