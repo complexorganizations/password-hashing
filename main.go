@@ -13,11 +13,6 @@ import (
 	"time"
 )
 
-/* Todo:
-- Make it write on new lines
-- Add Concurrency
-*/
-
 type PasswordReport struct {
 	MD5    string `json:"md5"`
 	SHA1   string `json:"sha-1"`
