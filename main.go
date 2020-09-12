@@ -72,7 +72,7 @@ func checkForDuplicate(filepath string, password string) bool{
 
 	jsonFile, err := os.Open(filepath)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	defer jsonFile.Close()
 
@@ -99,7 +99,6 @@ func checkForDuplicate(filepath string, password string) bool{
 	if val, ok := keys[password]; ok {
 		return val
 	}
-	fmt.Println("KEEYSSSS ::::: ", keys, len(keys))
 
 	return false
 }
@@ -116,9 +115,8 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(randomPass)
 		exists:= checkForDuplicate(outputFile, randomPass)
-		fmt.Println(exists)
+
 		if !exists {
 			fileStats, err := file.Stat()
 			if err != nil {
