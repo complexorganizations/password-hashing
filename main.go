@@ -79,7 +79,7 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 	if !fileExists(outputFile) {
 		//simple append
 		result = append(result, pr)
-		b, err := json.MarshalIndent(&result, "", " ")
+		b, err := json.Marshal(&result)
 		if err != nil {
 			log.Fatalln("Error while marshaling: ", err)
 		}
@@ -112,7 +112,7 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 
 	//appending
 	result = append(result, pr)
-	b, err := json.MarshalIndent(&result, "", " ")
+	b, err := json.Marshal(&result)
 	if err != nil {
 		log.Fatalln("Error while marshaling: ", err)
 	}
@@ -131,5 +131,7 @@ func writingInFile(b []byte) {
 }
 
 func main() {
-	appendIfNotPresent(getCompleteReport([]string{RandomString()}))
+	for {
+		appendIfNotPresent(getCompleteReport([]string{RandomString()}))
+	}
 }
