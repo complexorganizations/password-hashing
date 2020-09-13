@@ -8,15 +8,18 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"math/rand"
 	"os"
+	"reflect"
 	"time"
 )
 
 var (
-	charactersList = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\""
+	charactersList  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\""
 	charactersCount = 64
-	outputFile = "output.json"
+	outputFile      = "output.json"
 )
 
 type PasswordReport struct {
@@ -62,19 +65,71 @@ func RandomString() string {
 	return string(b)
 }
 
-func main() {
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
+func appendIfNotPresent(pr map[string]*PasswordReport) {
+	result := []map[string]*PasswordReport{}
+	//check if file exits
+	if !fileExists(outputFile) {
+		//simple append
+		result = append(result, pr)
+		b, err := json.MarshalIndent(&result, "", " ")
+		if err != nil {
+			log.Fatalln("Error while marshaling: ", err)
+		}
+		writingInFile(b)
+		return
+	}
+
+	//check for duplications
+	byteValue, err := ioutil.ReadFile(outputFile)
+	if err != nil {
+		log.Fatalln("Error while reading: ", err)
+	}
+	err = json.Unmarshal(byteValue, &result)
+	if err != nil {
+		log.Fatalln("Error while marshaling: ", err)
+	}
+
+	isFound := false
+	for _, r := range result {
+		if reflect.DeepEqual(r, pr) {
+			isFound = true
+			break
+		}
+	}
+
+	if isFound {
+		fmt.Println("Duplicate Found. Terminating.")
+		return
+	}
+
+	//appending
+	result = append(result, pr)
+	b, err := json.MarshalIndent(&result, "", " ")
+	if err != nil {
+		log.Fatalln("Error while marshaling: ", err)
+	}
+	writingInFile(b)
+}
+
+func writingInFile(b []byte) {
 	file, err := os.Create(outputFile)
 	if err != nil {
 		fmt.Printf("OS Error: %s", err)
 	}
-
-	for {
-		b, err := json.Marshal(getCompleteReport([]string{(RandomString())}))
-		if err != nil {
-			panic(err)
-		}
-		if _, err = file.Write(b); err != nil {
-			fmt.Printf("Error writing to a file %s", err)
-		}
+	if _, err = file.Write(b); err != nil {
+		fmt.Printf("Error writing to a file %s", err)
 	}
+	file.Close()
+}
+
+func main() {
+	appendIfNotPresent(getCompleteReport([]string{RandomString()}))
 }
