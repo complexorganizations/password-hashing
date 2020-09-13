@@ -8,7 +8,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"time"
@@ -26,11 +25,6 @@ type PasswordReport struct {
 	SHA256 string `json:"sha-256"`
 	SHA512 string `json:"sha-512"`
 }
-
-type PasswordMap struct{
-	Key 	 PasswordReport
-}
-
 
 func getPasswordReport(password []byte) *PasswordReport {
 	md5Bytes := md5.Sum(password)
@@ -68,41 +62,6 @@ func RandomString() string {
 	return string(b)
 }
 
-func checkForDuplicate(filepath string, password string) bool{
-
-	jsonFile, err := os.Open(filepath)
-	if err != nil {
-		panic(err)
-	}
-	defer jsonFile.Close()
-
-	bytesData, _ := ioutil.ReadAll(jsonFile)
-	firstJSON := []byte("[")
-	lastJSONBracket := []byte("]")
-	bytesData = append(firstJSON, bytesData...)
-	bytesData = append(bytesData, lastJSONBracket...)
-
-	var passwords []map[string]PasswordReport
-	err = json.Unmarshal(bytesData, &passwords)
-	if err != nil{
-		panic(err)
-	}
-
-	//get all json keys
-	keys := make(map[string]bool)
-	for _, singleMap := range passwords{
-		for k := range singleMap {
-			keys[k]=true
-		}
-	}
-
-	if val, ok := keys[password]; ok {
-		return val
-	}
-
-	return false
-}
-
 func main() {
 	file, err := os.Create(outputFile)
 	if err != nil {
@@ -110,24 +69,12 @@ func main() {
 	}
 
 	for {
-		randomPass := RandomString()
-		b, err := json.Marshal(getCompleteReport([]string{(randomPass)}))
+		b, err := json.Marshal(getCompleteReport([]string{(RandomString())}))
 		if err != nil {
 			panic(err)
 		}
-		exists:= checkForDuplicate(outputFile, randomPass)
-
-		if !exists {
-			fileStats, err := file.Stat()
-			if err != nil {
-				panic(err)
-			}
-			if fileStats.Size() != 0 {
-				b = append([]byte(","), b...)
-			}
-			if _, err = file.Write(b); err != nil {
-				fmt.Printf("Error writing to a file %s", err)
-			}
+		if _, err = file.Write(b); err != nil {
+			fmt.Printf("Error writing to a file %s", err)
 		}
 	}
 }
