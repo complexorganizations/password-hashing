@@ -106,7 +106,7 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 	}
 
 	if isFound {
-		// fmt.Println("Duplicate Found.")
+		fmt.Println("Duplicate Found.")
 		return
 	}
 
