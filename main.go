@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	charactersList  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!#$%&'()*+,-./:;<=>?@[]^_`{|}~\""
+	charactersList  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012346789!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
 	charactersCount = 64
 	outputFile      = "output.json"
 )
