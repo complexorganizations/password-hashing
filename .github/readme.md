@@ -4,10 +4,12 @@
 
 #### Features
 - Generate Random Passwords
-- Get SHA-1 From Passwords
-- Get SHA-256 From Password
-- Get SHA-512 From Password
 - Get MD5 From Password
+- Get SHA-1 From Passwords
+- Get SHA-224 From Password
+- Get SHA-256 From Password
+- Get SHA-384 From Password
+- Get SHA-512 From Password
 
 #### Json Format
 ```
