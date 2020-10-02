@@ -1,4 +1,4 @@
-## rainbow-table
+## Rainbow-Table
 
 ### Looking for someone whos willing to sponsor this project. (Public DB on Firestore)
 
