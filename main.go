@@ -137,7 +137,5 @@ func writingInFile(b []byte) {
 }
 
 func main() {
-	for {
 		appendIfNotPresent(getCompleteReport([]string{RandomString()}))
-	}
 }
