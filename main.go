@@ -25,20 +25,26 @@ var (
 type PasswordReport struct {
 	MD5    string `json:"md5"`
 	SHA1   string `json:"sha-1"`
+	SHA224 string `json:"sha-224"`
 	SHA256 string `json:"sha-256"`
+	SHA384 string `json:"sha-384"`
 	SHA512 string `json:"sha-512"`
 }
 
 func getPasswordReport(password []byte) *PasswordReport {
 	md5Bytes := md5.Sum(password)
 	sha1Bytes := sha1.Sum(password)
+	sha224Bytes := sha256.Sum224(password)
 	sha256Bytes := sha256.Sum256(password)
+	sha384Bytes := sha512.Sum384(password)
 	sha512Bytes := sha512.Sum512(password)
 
 	return &PasswordReport{
 		MD5:    hex.EncodeToString(md5Bytes[:]),
 		SHA1:   hex.EncodeToString(sha1Bytes[:]),
+		SHA224: hex.EncodeToString(sha224Bytes[:]),
 		SHA256: hex.EncodeToString(sha256Bytes[:]),
+		SHA384: hex.EncodeToString(sha384Bytes[:]),
 		SHA512: hex.EncodeToString(sha512Bytes[:]),
 	}
 }
