@@ -41,7 +41,6 @@ func getPasswordReport(password []byte) *PasswordReport {
 	sha256Bytes := sha256.Sum256(password)
 	sha384Bytes := sha512.Sum384(password)
 	sha512Bytes := sha512.Sum512(password)
-
 	return &PasswordReport{
 		MD5:    hex.EncodeToString(md5Bytes[:]),
 		SHA1:   hex.EncodeToString(sha1Bytes[:]),
@@ -66,7 +65,6 @@ func getCompleteReport(passwords []string) map[string]*PasswordReport {
 func RandomString() string {
 	rand.Seed(time.Now().UnixNano())
 	var letterRunes = []rune(charactersList)
-
 	b := make([]rune, rand.Intn(charactersCount)+1)
 	for i := range b {
 		b[i] = letterRunes[rand.Intn(len(letterRunes))]
@@ -95,7 +93,6 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 		writingInFile(b)
 		return
 	}
-
 	//check for duplications
 	byteValue, err := ioutil.ReadFile(outputFile)
 	if err != nil {
@@ -105,7 +102,6 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 	if err != nil {
 		log.Fatalln("Error while marshaling: ", err)
 	}
-
 	isFound := false
 	for _, r := range result {
 		if reflect.DeepEqual(r, pr) {
@@ -113,12 +109,10 @@ func appendIfNotPresent(pr map[string]*PasswordReport) {
 			break
 		}
 	}
-
 	if isFound {
 		fmt.Println("Duplicate Found.")
 		return
 	}
-
 	//appending
 	result = append(result, pr)
 	b, err := json.Marshal(&result)
